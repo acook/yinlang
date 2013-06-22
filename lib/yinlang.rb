@@ -1,5 +1,13 @@
 require "yinlang/version"
 
 module Yinlang
-  # Your code goes here...
+  include Citrus
+
+  def parse string
+  end
+
+  def lang
+    Grammar.new do
+    end
+  end
 end
