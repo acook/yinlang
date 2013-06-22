@@ -1,0 +1,33 @@
+grammar YinlangGrammar
+
+  rule additive
+    (number plus term:(additive | number)) {
+      def head
+        number.value
+      end
+
+      def tail
+        term.value
+      end
+
+      def value
+        head + tail
+      end
+    }
+  end
+
+  rule number
+    ([0-9]+) {
+      to_i
+    }
+  end
+
+  rule plus
+    space '+' space
+  end
+
+  rule space
+    [ \t]+
+  end
+
+end
