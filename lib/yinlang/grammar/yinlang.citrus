@@ -1,7 +1,7 @@
 grammar YinlangGrammar
 
-  rule additive
-    (number plus term:(chain | number)) {
+  rule expression
+    (number operator term:(chain | number)) {
       def head
         number.value
       end
@@ -11,7 +11,17 @@ grammar YinlangGrammar
       end
 
       def value
-        ([head] + Array(tail)).inject(0){|sum, num| sum + num}
+        (Array(tail).unshift head).inject do |result, num|
+          result.send operator.value, num
+        end
+      end
+    }
+  end
+
+  rule operator
+    (space op:('+' | '-') space) {
+      def value
+        op.strip.to_sym
       end
     }
   end
@@ -28,10 +38,6 @@ grammar YinlangGrammar
         [number.value] + Array(link.value)
       end
     }
-  end
-
-  rule plus
-    space '+' space
   end
 
   rule space
