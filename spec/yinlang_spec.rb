@@ -2,12 +2,28 @@ require_relative '../lib/yinlang'
 
 describe Yinlang do
   describe 'addition' do
-    subject(:result){ Yinlang.parse('5 + 2') }
+    context 'basic' do
+      subject(:result){ Yinlang.parse('5 + 2') }
 
-    its(:value){ should == 7 }
+      its(:value){ should == 7 }
+      its(:head){ should == 5 }
+      its(:tail){ should == 2 }
+    end
 
-    its(:head){ should == 5 }
-    its(:tail){ should == 2 }
+    context 'two tail parameters' do
+      subject(:result){ Yinlang.parse('12 + 3 50') }
 
+      its(:value){ should == 65 }
+      its(:head){ should == 12 }
+      its(:tail){ should == [3, 50] }
+    end
+
+    context 'three tail parameters' do
+      subject(:result){ Yinlang.parse('9 + 1 4 6') }
+
+      its(:value){ should == 20 }
+      its(:head){ should == 9 }
+      its(:tail){ should == [1, 4, 6] }
+    end
   end
 end

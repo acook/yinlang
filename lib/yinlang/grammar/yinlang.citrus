@@ -1,7 +1,7 @@
 grammar YinlangGrammar
 
   rule additive
-    (number plus term:(additive | number)) {
+    (number plus term:(chain | number)) {
       def head
         number.value
       end
@@ -11,7 +11,7 @@ grammar YinlangGrammar
       end
 
       def value
-        head + tail
+        ([head] + Array(tail)).inject(0){|sum, num| sum + num}
       end
     }
   end
@@ -19,6 +19,14 @@ grammar YinlangGrammar
   rule number
     ([0-9]+) {
       to_i
+    }
+  end
+
+  rule chain
+    (number space link:(chain | number)) {
+      def value
+        [number.value] + Array(link.value)
+      end
     }
   end
 
