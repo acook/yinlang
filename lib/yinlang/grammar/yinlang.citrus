@@ -1,7 +1,7 @@
 grammar YinlangGrammar
 
   rule expression
-    (number operator term:(chain | number)) {
+    (number operator term:(expression | chain | number)) {
       def head
         number.value
       end
@@ -12,8 +12,12 @@ grammar YinlangGrammar
 
       def value
         (Array(tail).unshift head).inject do |result, num|
-          result.send operator.value, num
+          result.send op, num
         end
+      end
+
+      def op
+        operator.value
       end
     }
   end

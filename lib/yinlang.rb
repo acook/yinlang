@@ -1,6 +1,25 @@
-require 'citrus'
-
+require 'citrus/debug'
+require 'pry'
 require 'yinlang/version'
+require 'yinlang/exceptions'
+
+
+class Fake < Module
+  module SuperFake
+    def method_missing *args, &block
+      self
+    end
+
+    def to_s
+      "FAAAAAAAAAAAAKE!!!"
+    end
+  end
+
+  include SuperFake
+  extend  SuperFake
+end
+
+
 
 module Yinlang
   extend  self
@@ -8,6 +27,9 @@ module Yinlang
 
   def parse *args
     grammar.parse *args
+  rescue Citrus::ParseError => error
+    match, input, events = debug_parse *args
+    raise Yinlang::ParseError.new(error, match, input, events)
   end
 
   def grammar
@@ -24,5 +46,13 @@ module Yinlang
 
   def load_grammars
     Citrus.load root.join(*%w{lib yinlang grammar yinlang}).to_s
+  end
+
+  def debug_parse *args
+    grammar.debug_parse *args
+  rescue => error
+    puts error.inspect
+    puts *error.backtrace
+    binding.pry
   end
 end
