@@ -11,7 +11,8 @@ describe Yinlang do
 
       its(:value){ should == 7 }
       its(:head){ should == 5 }
-      its(:tail){ should == 2 }
+      its(:secondary){ should == 2 }
+      its(:tail){ should == [2] }
     end
 
     context 'two tail parameters' do
@@ -39,7 +40,8 @@ describe Yinlang do
 
       its(:value){ should == 9 }
       its(:head){ should == 10 }
-      its(:tail){ should == 1 }
+      its(:secondary){ should == 1 }
+      its(:tail){ should == [1] }
     end
 
     context 'two tail parameters' do

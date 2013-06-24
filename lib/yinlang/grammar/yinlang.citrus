@@ -1,19 +1,27 @@
 grammar YinlangGrammar
 
   rule expression
-    (number operator term:(expression | chain | number)) {
+    (primary:(number) operator term:(chain | expression | number)) {
       def head
-        number.value
+        primary.value
+      end
+
+      def secondary
+        tail.first
       end
 
       def tail
-        term.value
+        Array(term.value)
       end
 
       def value
-        (Array(tail).unshift head).inject do |result, num|
+        tail.inject(head) do |result, num|
           result.send op, num
         end
+      end
+
+      def parameters
+        Array(tail).unshift head
       end
 
       def op
@@ -23,10 +31,8 @@ grammar YinlangGrammar
   end
 
   rule operator
-    (space op:('+' | '-') space) {
-      def value
-        op.strip.to_sym
-      end
+    (space op:('+' | '-') space?) {
+      strip.to_sym
     }
   end
 
@@ -37,10 +43,14 @@ grammar YinlangGrammar
   end
 
   rule chain
-    (number space link:(chain | number)) {
-      def value
-        [number.value] + Array(link.value)
-      end
+    (number link+) {
+      split(' ').map{|n| n.to_i}
+    }
+  end
+
+  rule link
+    (space number) {
+      to_i
     }
   end
 

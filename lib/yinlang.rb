@@ -3,24 +3,6 @@ require 'pry'
 require 'yinlang/version'
 require 'yinlang/exceptions'
 
-
-class Fake < Module
-  module SuperFake
-    def method_missing *args, &block
-      self
-    end
-
-    def to_s
-      "FAAAAAAAAAAAAKE!!!"
-    end
-  end
-
-  include SuperFake
-  extend  SuperFake
-end
-
-
-
 module Yinlang
   extend  self
   include Citrus
