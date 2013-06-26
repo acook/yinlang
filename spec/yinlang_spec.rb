@@ -24,6 +24,10 @@ describe Yinlang do
       its(:operator){ should == :+ }
       its(:head){ should == 12 }
       its(:tail){ should == [3, 50] }
+
+      it 'does stuff' do
+        #binding.pry
+      end
     end
 
     context 'three tail parameters' do

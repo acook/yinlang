@@ -39,8 +39,8 @@ module Yinlang
 
       else
 
-        debug "#{green}OUTPUT#{norm}",
-          "\n\n#{result.inspect}", header: "#{green}SUCCESSFUL PARSE#{norm}"
+        #debug "#{green}OUTPUT#{norm}",
+        #  "\n\n#{result.inspect}", header: "#{green}SUCCESSFUL PARSE#{norm}"
 
       end
 
@@ -60,7 +60,7 @@ module Yinlang
     end
 
     def debug *args
-      Uparse::Debug.log *args if $debug
+      Uparse::Debug.log *args #if $debug
     end
   end
 end

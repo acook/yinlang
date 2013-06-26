@@ -7,7 +7,7 @@ grammar YinlangTreetop
       end
 
       def tail
-        operation.tail
+        operation.value
       end
 
       def operator
@@ -19,8 +19,9 @@ grammar YinlangTreetop
       end
 
       def value
+        binding.pry if tail.empty? || tail.first.is_a?(Array)
+
         tail.inject(head) do |memo, num|
-          binding.pry if num.is_a? Array
           memo.send operator, num
         end
       end
@@ -28,7 +29,7 @@ grammar YinlangTreetop
   end
 
   rule op_chain
-    space link:(operation / arg_list / number) {
+    space link:(operation / args) {
       def value
         link.value
       end
@@ -36,31 +37,54 @@ grammar YinlangTreetop
   end
 
   rule args
-    initial:number (space following:args)? {
+    number following:(space args)? {
       def value
-        list = Array(initial.value)
-        list + Array(following.value) unless following.nil? || following.empty?
-        list
+        if !defined?(following) || following.empty? then
+          Array(number.value)
+        else
+          following.args.value.unshift number.value
+        end
       end
     }
   end
 
   rule operation
-    operator chain:((link:op_chain)*) {
+    operator space args? {
       def tail
-        chain.elements.map{|e| e.link.value }
+
+        if contents.length > 1 && !contents.last.empty? then
+          arglist = contents.last.args
+
+          begin
+            arglist.value
+          rescue NoMethodError => error
+            arglist.elements.inject(Array.new) do |memo, arg|
+              memo << arg.value
+            end
+          end
+
+        else
+          Array.new
+        end
+
+      rescue => error
+        binding.pry
+      end
+
+      def head
+        contents.first.value
       end
 
       def value
-        tail
+        Array(head) + tail
       end
-    }
-  end
 
-  rule arg_list
-    initial:number space link:(arg_list / number) {
-      def value
-        [initial.value] + Array(link.value)
+      def contents
+        get_args.elements
+      end
+
+      def get_args
+        elements.last
       end
     }
   end
