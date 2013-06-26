@@ -18,6 +18,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
 
   gem.add_dependency 'citrus'
+  gem.add_dependency 'treetop'
 
   gem.add_development_dependency 'pry'
   gem.add_development_dependency 'pry-theme'

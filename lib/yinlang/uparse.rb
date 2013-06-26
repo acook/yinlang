@@ -48,7 +48,40 @@ module Uparse
     end
 
     def parse text
+      Debug.log 'input length', text.length, header: 'parsing'
 
+
+      rules.inject(Hash.new) do |matches, (name, rule)|
+        matchdata = rule.matcher.match(text)
+
+        Debug.log 'rule name', name
+        Debug.log :pattern, rule.pattern.inspect
+        Debug.log :matcher, rule.matcher
+        Debug.log :matchdata, matchdata.inspect
+
+        if matchdata then
+          captures = matchdata.captures
+
+          Debug.log :captures, captures
+
+          if rule.value_proc then
+            value = captures.first.instance_eval &rule.value_proc
+          else
+            value = nil
+          end
+
+          Debug.log :value, value.inspect
+          Debug.log :type, Debug.object_info(value)
+
+          matches[name] = [value, matchdata.captures]
+        else
+          Debug.log :value, 'no match!'
+        end
+
+        Debug.log newline: 1
+
+        matches
+      end
     end
 
     def define_rule name, pattern, &value_proc

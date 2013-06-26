@@ -1,0 +1,31 @@
+grammar YinlangTreetop
+
+  rule expression
+    number space operation
+  end
+
+  rule tail
+    space (operation / chain / number)
+  end
+
+  rule operation
+    operator tail*
+  end
+
+  rule chain
+    number space (chain / number)
+  end
+
+  rule number
+    [\d]+
+  end
+
+  rule operator
+    [-+]
+  end
+
+  rule space
+    ' '
+  end
+
+end
