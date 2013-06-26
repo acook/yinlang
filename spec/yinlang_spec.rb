@@ -1,8 +1,8 @@
-require_relative '../lib/yinlang'
+require_relative '../lib/yinlang/treetop_parser'
 
 describe Yinlang do
   def parse text
-    Yinlang.parse text
+    Yinlang::TreetopParser.parse text
   end
 
   describe 'addition' do

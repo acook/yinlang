@@ -38,42 +38,9 @@ when 'treetop'
 
   require './lib/yinlang/treetop_parser'
 
-  parser = TreetopParser.new
-  parser.consume_all_input = false
+  parser = Yinlang::TreetopParser
 
   result = parser.parse test_expression
-
-  norm  = "\e[0m"
-  red   = "\e[31m"
-  green = "\e[32m"
-
-  if result.nil? || parser.index != test_expression.length then
-
-    debug 'failed to parse test expression',
-      test_expression.inspect, header: "#{red}PARSE ERROR#{norm}"
-
-    debug 'error location', test_expression
-    debug '', "#{(' ' * (parser.index.to_i + 1))}#{red}^#{norm}"
-
-    debug 'input length', test_expression.length.inspect
-    debug 'last index', parser.index.inspect, newline: 1
-
-    debug 'terminal failures', parser.terminal_failures.inspect
-    debug 'failure reason', parser.failure_reason.inspect
-    debug 'failure line', parser.failure_line.inspect
-    debug 'failure column', parser.failure_column.inspect
-    debug 'failure index', parser.failure_index.inspect
-
-    debug newline: 1
-
-    debug "#{red}OUTPUT#{norm}", "\n\n#{result.inspect}", newline: 1
-
-  else
-
-    debug "#{green}OUTPUT#{norm}",
-      "\n\n#{result.inspect}", header: "#{green}SUCCESSFUL PARSE#{norm}"
-
-  end
 
 else
   puts "Please specify a parser: citrus, custom, or treetop."
