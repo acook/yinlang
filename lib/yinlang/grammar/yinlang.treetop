@@ -1,27 +1,84 @@
 grammar YinlangTreetop
 
   rule expression
-    number space operation
+    number space operation {
+      def head
+        number.value
+      end
+
+      def tail
+        operation.tail
+      end
+
+      def operator
+        operation.operator.value
+      end
+
+      def secondary
+        tail.first
+      end
+
+      def value
+        tail.inject(head) do |memo, num|
+          binding.pry if num.is_a? Array
+          memo.send operator, num
+        end
+      end
+    }
   end
 
-  rule tail
-    space (operation / chain / number)
+  rule op_chain
+    space link:(operation / arg_list / number) {
+      def value
+        link.value
+      end
+    }
+  end
+
+  rule args
+    initial:number (space following:args)? {
+      def value
+        list = Array(initial.value)
+        list + Array(following.value) unless following.nil? || following.empty?
+        list
+      end
+    }
   end
 
   rule operation
-    operator tail*
+    operator chain:((link:op_chain)*) {
+      def tail
+        chain.elements.map{|e| e.link.value }
+      end
+
+      def value
+        tail
+      end
+    }
   end
 
-  rule chain
-    number space (chain / number)
+  rule arg_list
+    initial:number space link:(arg_list / number) {
+      def value
+        [initial.value] + Array(link.value)
+      end
+    }
   end
 
   rule number
-    [\d]+
+    [\d]+ {
+      def value
+        text_value.to_i
+      end
+    }
   end
 
   rule operator
-    [-+]
+    [-+] {
+      def value
+        text_value.to_sym
+      end
+    }
   end
 
   rule space

@@ -1,4 +1,5 @@
 require_relative '../lib/yinlang/treetop_parser'
+require 'pry'
 
 describe Yinlang do
   def parse text
@@ -10,6 +11,7 @@ describe Yinlang do
       subject(:result){ parse '5 + 2' }
 
       its(:value){ should == 7 }
+      its(:operator){ should == :+ }
       its(:head){ should == 5 }
       its(:secondary){ should == 2 }
       its(:tail){ should == [2] }
@@ -19,6 +21,7 @@ describe Yinlang do
       subject(:result){ parse '12 + 3 50' }
 
       its(:value){ should == 65 }
+      its(:operator){ should == :+ }
       its(:head){ should == 12 }
       its(:tail){ should == [3, 50] }
     end
@@ -27,6 +30,7 @@ describe Yinlang do
       subject(:result){ parse '9 + 1 4 6' }
 
       its(:value){ should == 20 }
+      its(:operator){ should == :+ }
       its(:head){ should == 9 }
       its(:tail){ should == [1, 4, 6] }
     end
@@ -36,7 +40,7 @@ describe Yinlang do
     context 'basic' do
       subject(:result){ parse '10 - 1' }
 
-      its(:op){ should == :- }
+      its(:operator){ should == :- }
 
       its(:value){ should == 9 }
       its(:head){ should == 10 }

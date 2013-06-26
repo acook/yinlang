@@ -39,7 +39,7 @@ when 'treetop'
   require './lib/yinlang/treetop_parser'
 
   parser = Yinlang::TreetopParser
-
+  $debug = true
   result = parser.parse test_expression
 
 else

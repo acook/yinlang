@@ -60,7 +60,7 @@ module Yinlang
     end
 
     def debug *args
-      Uparse::Debug.log *args
+      Uparse::Debug.log *args if $debug
     end
   end
 end
